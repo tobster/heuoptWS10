@@ -1,4 +1,4 @@
-package at.ac.tuwien.util
+package at.ac.tuwien.opt.util
 
 import scala.math._
 

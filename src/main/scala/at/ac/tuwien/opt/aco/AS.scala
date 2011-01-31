@@ -19,19 +19,19 @@ class AS(val instance: List[(Double, Double)],
   extends Object with DistanceHelper {
   type Matrix = Array[Array[Double]]
   //pheromones
-  val tau: Matrix = Array.fill(instance.size, instance.size) initialPheromone
+  val tau: Matrix = Array.fill(instance.size, instance.size){ initialPheromone }
   //distances
   val ny: Matrix = Array.tabulate(instance.size, instance.size)((i:Int, j:Int) => distance(instance(i),instance(j)))
   //unvisited neighbours
   val neighbourhood: List[Int] = List.range(1, instance.size)
-  val visited: List[Int] = (0)
+  val visited: List[Int] = List(0)
 
   def p(i: Int, j: Int): Double = {
     pow(tau(i)(j), alpha) * pow(ny(i)(j), beta) /
       (0.0 /: neighbourhood)((total, l) => total + pow(tau(i)(l), alpha) * pow(ny(i)(l), beta))
   }
 
-  def chooseTarget(source:Int): Int = neighbourhood.find(target => source!=tartet && Random.nextDouble > p(source,target))
+  def chooseTarget(source:Int): Option[Int] = neighbourhood.find(target => source!=target && Random.nextDouble > p(source,target))
 
   def chooseSource(): Int = visited(Random.nextInt(visited.size))
 }

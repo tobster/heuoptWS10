@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.Assert._
 import org.scalatest.junit.JUnitSuite
 import org.hamcrest.core.Is._
+
 class ASTest extends JUnitSuite with MustMatchers {
 
 
@@ -28,12 +29,25 @@ class ASTest extends JUnitSuite with MustMatchers {
   @Test def nodesByDistanceTest() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
     var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
-    assertThat(as.nodesByDistance(0).toList, is(List(0,1,2,3)));
-    assertThat(as.nodesByDistance(1).toList, is(List(1,0,2,3)));
-    assertThat(as.nodesByDistance(2).toList, is(List(2,3,0,1)));
-    assertThat(as.nodesByDistance(3).toList, is(List(3,2,0,1)));
-
+    assertThat(as.nodesByDistance(0).toList, is(List(0, 1, 2, 3)))
+    assertThat(as.nodesByDistance(1).toList, is(List(1, 0, 2, 3)))
+    assertThat(as.nodesByDistance(2).toList, is(List(2, 3, 0, 1)))
+    assertThat(as.nodesByDistance(3).toList, is(List(3, 2, 0, 1)))
   }
 
+  @Test def reachedTest() {
+    var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
+    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
+    assertThat(as.reached(0,1),is(Set(0,1)))
+    assertThat(as.reached(0,2),is(Set(0,1,2)))
+    assertThat(as.reached(0,3),is(Set(0,1,2,3)))
+  }
 
+  @Test def reachedTestSameDistance() {
+    var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-02.dat")
+    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
+    println(as.nodesByDistance(0))
+    assertThat(as.reached(0,1),is(Set(0,1,2)))
+    assertThat(as.reached(0,2),is(Set(0,1,2)))
+  }
 }

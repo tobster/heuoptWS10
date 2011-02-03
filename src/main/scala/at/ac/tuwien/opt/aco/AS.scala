@@ -3,7 +3,7 @@ package at.ac.tuwien.opt.aco
 import scala.math._
 import at.ac.tuwien.opt.util.DistanceHelper
 import scala.util.Random
-import collection.immutable.SortedSet
+import scala.collection.mutable.BitSet
 
 class Ant(instance: List[(Double, Double)],
           alpha: Double = .5,
@@ -33,34 +33,39 @@ class Ant(instance: List[(Double, Double)],
   //distances
   val ny: Array[Array[Double]] = Array.tabulate(instance.size, instance.size)((i: Int, j: Int) => distance(instance(i), instance(j)))
   // unvisited neighbours.
-  val neighbourhood: Set[Int] = List.range(1, instance.size).toSet
+  var neighbourhood: BitSet = new BitSet(List.range(1, instance.size))
   // the visited cities.
-  val visited: Set[Int] = Set(0)
+  var visited: BitSet = BitSet(0)
 
-  val nodesByDistance: Array[SortedSet[Int]] = Array.tabulate(instance.size)((i: Int) =>
-    SortedSet(Seq.range(0, instance.size))(new Ordering[Int] {
-        override def compare(x:Int, y:Int): Int = {
-           ny(i)(x).compare(ny(i)(y))
+  val nodesByDistance: Array[Seq[Int]] = Array.tabulate(instance.size)((i: Int) =>
+    Seq.range(0, instance.size).sorted(new Ordering[Int] {
+      override def compare(x: Int, y: Int): Int = {
+        ny(i)(x) - (ny(i)(y)) match {
+          case d if d.abs <= 0.001 => 0
+          case d if d > 0 => 1
+          case _ => -1
         }
-    }))
+      }
+    })
+  )
 
   def p(i: Int, j: Int): Double = {
     pow(tau(i)(j), alpha) * pow(ny(i)(j), beta) /
       (0.0 /: neighbourhood)((total, l) => total + pow(tau(i)(l), alpha) * pow(ny(i)(l), beta))
   }
 
-  def reached(source: Int, target: Int): Set[Int] = {
-
+  def reached(source: Int, target: Int): TraversableOnce[Int] = {
+    nodesByDistance(source).takeWhile((current: Int) => ny(source)(current) - (ny(source)(target)) < 0.001)
   }
 
   def solve(iterations: Int): (Double, List[(Int, Int)]) = {
     for (t <- 0 to iterations) {
       while (!neighbourhood.isEmpty) {
-/*        val source = chooseSource()
-        val target = chooseTarget(source).get
-        val reached:Set[Int] = reached(source, target)
-        visited += reached
-        neighbourhood -= reached*/
+        val source: Int = chooseSource()
+        val target: Int = chooseTarget(source).get
+        val r: TraversableOnce[Int] = reached(source, target)
+        visited ++= r
+        neighbourhood --= r
       }
     }
     return (.0, Nil)

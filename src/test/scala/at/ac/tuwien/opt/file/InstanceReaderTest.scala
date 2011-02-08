@@ -8,7 +8,7 @@ class InstanceReaderTest extends Spec with MustMatchers {
   describe("Instance reader") {
 
     describe("when reading Instance from valid file") {
-      val values = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-01.dat");
+      val values = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-01.dat").points.iterator;
       it("should contain values") {
         //"296.0".toFloat must be === 296.0
         values.next must be === (296.0, 637.6)

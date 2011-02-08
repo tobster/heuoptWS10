@@ -12,7 +12,7 @@ class ASTest extends JUnitSuite with MustMatchers {
 
   @Test def testP() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-02.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
+    var as = new Ant(instance = instance, alpha = 1, beta = 1,tau = Array.fill(instance.size, instance.size){1})
     assertEquals(as.p(0, 1), .5, .0001)
     println(as.p(0, 1))
     println(as.p(0, 2))
@@ -28,46 +28,46 @@ class ASTest extends JUnitSuite with MustMatchers {
 
   @Test def nodesByDistanceTest() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
-    assertThat(as.nodesByDistance(0).toList, is(List(0, 1, 2, 3)))
-    assertThat(as.nodesByDistance(1).toList, is(List(1, 0, 2, 3)))
-    assertThat(as.nodesByDistance(2).toList, is(List(2, 3, 0, 1)))
-    assertThat(as.nodesByDistance(3).toList, is(List(3, 2, 0, 1)))
+    var as = new Ant(instance = instance, alpha = 1, beta = 1,tau = Array.fill(instance.size, instance.size){1})
+    assertThat(instance.nodesByDistance(0).toList, is(List(0, 1, 2, 3)))
+    assertThat(instance.nodesByDistance(1).toList, is(List(1, 0, 2, 3)))
+    assertThat(instance.nodesByDistance(2).toList, is(List(2, 3, 0, 1)))
+    assertThat(instance.nodesByDistance(3).toList, is(List(3, 2, 0, 1)))
   }
 
   @Test def reachedTest() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
-    assertThat(as.reached(0, 1), is(List(0, 1).asInstanceOf[TraversableOnce[Int]]))
-    assertThat(as.reached(0, 2), is(List(0, 1, 2).asInstanceOf[TraversableOnce[Int]]))
-    assertThat(as.reached(0, 3), is(List(0, 1, 2, 3).asInstanceOf[TraversableOnce[Int]]))
+    var as = new Ant(instance = instance, alpha = 1, beta = 1,tau = Array.fill(instance.size, instance.size){1})
+    assertThat(instance.reached(0, 1), is(Set(0, 1)))
+    assertThat(instance.reached(0, 2), is(Set(0, 1, 2)))
+    assertThat(instance.reached(0, 3), is(Set(0, 1, 2, 3)))
   }
 
   @Test def reachedTestSameDistance() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-02.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
-    println(as.nodesByDistance(0))
-    assertThat(as.reached(0, 1), is(List(0, 1, 2).asInstanceOf[TraversableOnce[Int]]))
-    assertThat(as.reached(0, 2), is(List(0, 1, 2).asInstanceOf[TraversableOnce[Int]]))
+    var as = new Ant(instance = instance, alpha = 1, beta = 1,tau = Array.fill(instance.size, instance.size){1})
+    println(instance.nodesByDistance(0))
+    assertThat(instance.reached(0, 1), is(Set(0, 1, 2)))
+    assertThat(instance.reached(0, 2), is(Set(0, 1, 2)))
   }
 
   @Test def testCalculateCosts() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
-    for (x <- as.ny; y <- x) {
+    var as = new Ant(instance = instance, alpha = 1, beta = 1,tau = Array.fill(instance.size, instance.size){1})
+    for (x <- instance.ny; y <- x) {
       println(y)
     }
 
     var r = List((0, 2), (2, 3))
-    assertEquals(as.ny(0)(2) + as.ny(2)(3), as.calculateCosts(r), 0.001)
+    assertEquals(instance.ny(0)(2) + instance.ny(2)(3), instance.calculateCosts(r), 0.001)
 
-    println("costs: " + (as.ny(0)(2) + as.ny(2)(3)))
+    println("costs: " + (instance.ny(0)(2) + instance.ny(2)(3)))
   }
 
 
   @Test def testVaporizePheromone() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
+    var as = new Aco(instance = instance, alpha = 1, beta = 1)
 
     as.vaporizePheromone()
 
@@ -78,7 +78,7 @@ class ASTest extends JUnitSuite with MustMatchers {
 
   @Test def testUpdatePheromone() {
     var instance = InstanceReader.readInstance("target/scala_2.8.1/test-resources/mebp-03.dat")
-    var as = new Ant(instance = instance.toList, alpha = 1, beta = 1)
+    var as = new Aco(instance = instance, alpha = 1, beta = 1)
 
     as.updatePheromone(List((0, 2), (2, 3)), 10)
 

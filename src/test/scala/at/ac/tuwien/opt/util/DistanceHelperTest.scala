@@ -4,7 +4,7 @@ import org.scalatest.Spec
 import org.scalatest.matchers.MustMatchers
 class DistanceHelperTest extends Spec with MustMatchers with DistanceHelper {
 
-  describe("distance of Nodes 0,0 and 0,1") {
+/*  describe("distance of Nodes 0,0 and 0,1") {
     val x = distance((0, 0),(0, 1))
     it("should be 1") {
       x must be === 1.0
@@ -33,5 +33,5 @@ class DistanceHelperTest extends Spec with MustMatchers with DistanceHelper {
     it("should be 11,180339887") {
       x must be === 11.180339887498949
     }
-  }
+  }  */
 }

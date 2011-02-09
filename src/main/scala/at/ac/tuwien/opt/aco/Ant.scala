@@ -48,7 +48,7 @@ class Ant(val instance: Instance,
       neighbourhood --= r
 
       buffer = buffer.filter(t => t._1 != source)
-      buffer :+ (source, target)
+      buffer.append((source, target))
     }
     // Reset neighborhood and visited.
     neighbourhood = BitSet() ++ Range(1, instance.size)

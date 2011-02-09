@@ -3,14 +3,14 @@ package at.ac.tuwien.opt.aco
 import scala.math._
 
 class Aco(val instance: Instance,
-          initialPheromone: Double = 1.0,
-          rho: Double = 0.3,
-          alpha: Double = .5,
-          beta: Double = .5,
-          tauMax: Double = Double.MaxValue,
-          tauMin: Double = 0) {
+  initialPheromone: Double = 1.0,
+  rho: Double = 0.3,
+  alpha: Double = .5,
+  beta: Double = .5,
+  tauMax: Double = Double.MaxValue,
+  tauMin: Double = 0) {
   //pheromones
-  var tau: Array[Array[Double]] = Array.fill(instance.size, instance.size){ initialPheromone } 
+  var tau: Array[Array[Double]] = Array.fill(instance.size, instance.size) { initialPheromone }
 
   def updatePheromone(result: List[(Int, Int)], cost: Double) = {
     result.foreach((t) => tau(t._1)(t._2) = min(tau(t._1)(t._2) * 1 + 1 / cost, tauMax))

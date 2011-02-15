@@ -40,4 +40,14 @@ class Aco(val instance: Instance,
     }
     return (minCosts, min)
   }
+
+  override def toString = {
+    List(
+      "initialPheromone:", initialPheromone,
+      "\trho:", rho,
+      "\talpha:", alpha,
+      "\tbeta:", beta,
+      "\ttauMax:", tauMax,
+      "\ttauMin:", tauMin).mkString
+  }
 }

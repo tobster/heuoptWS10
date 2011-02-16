@@ -21,11 +21,11 @@ object AntEater {
         println(result._1)
         result._2.foreach(println(_))
 
-        result = LocalSearch.search(instance, result._2, result._1)
+        //result = LocalSearch.search(instance, result._2, result._1)
 
-        println("local search result")
-        println(result._1)
-        result._2.foreach(println(_))
+        //println("local search result")
+        //println(result._1)
+        //result._2.foreach(println(_))
 
         println("checking result: ")
         if (Checker.checkSolution(instance, result._2)) {
